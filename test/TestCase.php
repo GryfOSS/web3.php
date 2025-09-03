@@ -9,38 +9,38 @@ class TestCase extends BaseTestCase
 {
     /**
      * web3
-     * 
+     *
      * @var \Web3\Web3
      */
     protected $web3;
 
     /**
      * testRinkebyHost
-     * 
+     *
      * @var string
      */
     protected $testRinkebyHost = 'https://rinkeby.infura.io/vuethexplore';
 
     /**
      * testHost
-     * 
+     *
      * @var string
      */
     protected $testHost = 'http://localhost:8545';
 
     /**
      * coinbase
-     * 
+     *
      * @var string
      */
     protected $coinbase;
 
     /**
      * setUp
-     * 
+     *
      * @return void
      */
-    public function setUp()
+    public function setUp() : void
     {
         $web3 = new Web3($this->testHost);
         $this->web3 = $web3;
@@ -55,8 +55,8 @@ class TestCase extends BaseTestCase
 
     /**
      * tearDown
-     * 
+     *
      * @return void
      */
-    public function tearDown() {}
+    public function tearDown(): void {}
 }
