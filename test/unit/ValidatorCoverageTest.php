@@ -48,19 +48,19 @@ class ValidatorCoverageTest extends TestCase
 
         // Test invalid filter data
         $this->assertFalse(FilterValidator::validate('not an array'));
-        
+
         // Test invalid fromBlock
         $invalidFromBlock = [
             'fromBlock' => 'invalid'
         ];
         $this->assertFalse(FilterValidator::validate($invalidFromBlock));
-        
+
         // Test invalid toBlock
         $invalidToBlock = [
             'toBlock' => 'invalid'
         ];
         $this->assertFalse(FilterValidator::validate($invalidToBlock));
-        
+
         // Test array of addresses
         $validFilterWithMultipleAddresses = [
             'address' => [
@@ -69,7 +69,7 @@ class ValidatorCoverageTest extends TestCase
             ]
         ];
         $this->assertTrue(FilterValidator::validate($validFilterWithMultipleAddresses));
-        
+
         // Test invalid address in array
         $invalidFilterWithBadAddress = [
             'address' => [
@@ -78,13 +78,13 @@ class ValidatorCoverageTest extends TestCase
             ]
         ];
         $this->assertFalse(FilterValidator::validate($invalidFilterWithBadAddress));
-        
+
         // Test single invalid address
         $invalidAddress = [
             'address' => 'invalid_address'
         ];
         $this->assertFalse(FilterValidator::validate($invalidAddress));
-        
+
         // Test nested topics array
         $nestedTopics = [
             'topics' => [
@@ -93,7 +93,7 @@ class ValidatorCoverageTest extends TestCase
             ]
         ];
         $this->assertTrue(FilterValidator::validate($nestedTopics));
-        
+
         // Test invalid nested topic
         $invalidNestedTopic = [
             'topics' => [
@@ -101,7 +101,7 @@ class ValidatorCoverageTest extends TestCase
             ]
         ];
         $this->assertFalse(FilterValidator::validate($invalidNestedTopic));
-        
+
         // Test invalid single topic
         $invalidSingleTopic = [
             'topics' => ['invalid_hex']
@@ -127,7 +127,7 @@ class ValidatorCoverageTest extends TestCase
 
         // Test invalid post data
         $this->assertFalse(PostValidator::validate('not an array'));
-        
+
         // Test invalid from
         $invalidFrom = [
             'from' => 'invalid',
@@ -137,7 +137,7 @@ class ValidatorCoverageTest extends TestCase
             'ttl' => '0x100'
         ];
         $this->assertFalse(PostValidator::validate($invalidFrom));
-        
+
         // Test invalid to
         $invalidTo = [
             'to' => 'invalid',
@@ -147,7 +147,7 @@ class ValidatorCoverageTest extends TestCase
             'ttl' => '0x100'
         ];
         $this->assertFalse(PostValidator::validate($invalidTo));
-        
+
         // Test missing topics
         $missingTopics = [
             'payload' => '0x123456',
@@ -155,7 +155,7 @@ class ValidatorCoverageTest extends TestCase
             'ttl' => '0x100'
         ];
         $this->assertFalse(PostValidator::validate($missingTopics));
-        
+
         // Test invalid topics array
         $invalidTopicsArray = [
             'topics' => 'not an array',
@@ -164,7 +164,7 @@ class ValidatorCoverageTest extends TestCase
             'ttl' => '0x100'
         ];
         $this->assertFalse(PostValidator::validate($invalidTopicsArray));
-        
+
         // Test invalid topic in array
         $invalidTopic = [
             'topics' => ['invalid_identity'],
@@ -173,7 +173,7 @@ class ValidatorCoverageTest extends TestCase
             'ttl' => '0x100'
         ];
         $this->assertFalse(PostValidator::validate($invalidTopic));
-        
+
         // Test missing payload
         $missingPayload = [
             'topics' => ['0x04f96a5e25610293e42a73908e93ccc8c4d4dc0edcfa9fa872f50cb214e08ebf61a03e245533f97284d442460f2998cd41858798ddfd4d661997d3940272b717b1'],
@@ -181,7 +181,7 @@ class ValidatorCoverageTest extends TestCase
             'ttl' => '0x100'
         ];
         $this->assertFalse(PostValidator::validate($missingPayload));
-        
+
         // Test invalid payload
         $invalidPayload = [
             'topics' => ['0x04f96a5e25610293e42a73908e93ccc8c4d4dc0edcfa9fa872f50cb214e08ebf61a03e245533f97284d442460f2998cd41858798ddfd4d661997d3940272b717b1'],
@@ -190,7 +190,7 @@ class ValidatorCoverageTest extends TestCase
             'ttl' => '0x100'
         ];
         $this->assertFalse(PostValidator::validate($invalidPayload));
-        
+
         // Test missing priority
         $missingPriority = [
             'topics' => ['0x04f96a5e25610293e42a73908e93ccc8c4d4dc0edcfa9fa872f50cb214e08ebf61a03e245533f97284d442460f2998cd41858798ddfd4d661997d3940272b717b1'],
@@ -198,7 +198,7 @@ class ValidatorCoverageTest extends TestCase
             'ttl' => '0x100'
         ];
         $this->assertFalse(PostValidator::validate($missingPriority));
-        
+
         // Test invalid priority
         $invalidPriority = [
             'topics' => ['0x04f96a5e25610293e42a73908e93ccc8c4d4dc0edcfa9fa872f50cb214e08ebf61a03e245533f97284d442460f2998cd41858798ddfd4d661997d3940272b717b1'],
@@ -207,7 +207,7 @@ class ValidatorCoverageTest extends TestCase
             'ttl' => '0x100'
         ];
         $this->assertFalse(PostValidator::validate($invalidPriority));
-        
+
         // Test missing ttl
         $missingTtl = [
             'topics' => ['0x04f96a5e25610293e42a73908e93ccc8c4d4dc0edcfa9fa872f50cb214e08ebf61a03e245533f97284d442460f2998cd41858798ddfd4d661997d3940272b717b1'],
@@ -215,7 +215,7 @@ class ValidatorCoverageTest extends TestCase
             'priority' => '0x1'
         ];
         $this->assertFalse(PostValidator::validate($missingTtl));
-        
+
         // Test invalid ttl
         $invalidTtl = [
             'topics' => ['0x04f96a5e25610293e42a73908e93ccc8c4d4dc0edcfa9fa872f50cb214e08ebf61a03e245533f97284d442460f2998cd41858798ddfd4d661997d3940272b717b1'],
@@ -246,23 +246,23 @@ class ValidatorCoverageTest extends TestCase
 
         // Test with invalid input
         $this->assertFalse(ShhFilterValidator::validate('invalid'));
-        
+
         // Test with missing topics
         $this->assertFalse(ShhFilterValidator::validate([]));
-        
+
         // Test with invalid topics array
         $invalidTopicsArray = [
             'topics' => 'not an array'
         ];
         $this->assertFalse(ShhFilterValidator::validate($invalidTopicsArray));
-        
+
         // Test with invalid 'to' identity
         $invalidTo = [
             'to' => 'invalid_identity',
             'topics' => ['0x1234']
         ];
         $this->assertFalse(ShhFilterValidator::validate($invalidTo));
-        
+
         // Test nested array topics
         $nestedTopics = [
             'topics' => [
@@ -270,7 +270,7 @@ class ValidatorCoverageTest extends TestCase
             ]
         ];
         $this->assertTrue(ShhFilterValidator::validate($nestedTopics));
-        
+
         // Test invalid nested topic
         $invalidNestedTopic = [
             'topics' => [
@@ -278,13 +278,13 @@ class ValidatorCoverageTest extends TestCase
             ]
         ];
         $this->assertFalse(ShhFilterValidator::validate($invalidNestedTopic));
-        
+
         // Test null topic (should be allowed)
         $nullTopic = [
             'topics' => [null]
         ];
         $this->assertTrue(ShhFilterValidator::validate($nullTopic));
-        
+
         // Test invalid non-null topic
         $invalidTopic = [
             'topics' => ['invalid_hex']
@@ -318,77 +318,77 @@ class ValidatorCoverageTest extends TestCase
 
         // Test with invalid 'from' address
         $this->assertFalse(TransactionValidator::validate(['from' => 'invalid']));
-        
+
         // Test with invalid 'to' address
         $invalidTo = [
             'from' => '0x0000000000000000000000000000000000000001',
             'to' => 'invalid_address'
         ];
         $this->assertFalse(TransactionValidator::validate($invalidTo));
-        
+
         // Test with valid gas
         $validGas = [
             'from' => '0x0000000000000000000000000000000000000001',
             'gas' => '0x5208'
         ];
         $this->assertTrue(TransactionValidator::validate($validGas));
-        
+
         // Test with invalid gas
         $invalidGas = [
             'from' => '0x0000000000000000000000000000000000000001',
             'gas' => 'invalid'
         ];
         $this->assertFalse(TransactionValidator::validate($invalidGas));
-        
+
         // Test with valid gasPrice
         $validGasPrice = [
             'from' => '0x0000000000000000000000000000000000000001',
             'gasPrice' => '0x9184e72a000'
         ];
         $this->assertTrue(TransactionValidator::validate($validGasPrice));
-        
+
         // Test with invalid gasPrice
         $invalidGasPrice = [
             'from' => '0x0000000000000000000000000000000000000001',
             'gasPrice' => 'invalid'
         ];
         $this->assertFalse(TransactionValidator::validate($invalidGasPrice));
-        
+
         // Test with valid value
         $validValue = [
             'from' => '0x0000000000000000000000000000000000000001',
             'value' => '0xde0b6b3a7640000'
         ];
         $this->assertTrue(TransactionValidator::validate($validValue));
-        
+
         // Test with invalid value
         $invalidValue = [
             'from' => '0x0000000000000000000000000000000000000001',
             'value' => 'invalid'
         ];
         $this->assertFalse(TransactionValidator::validate($invalidValue));
-        
+
         // Test with valid data
         $validData = [
             'from' => '0x0000000000000000000000000000000000000001',
             'data' => '0x608060405234801561001057600080fd5b5060'
         ];
         $this->assertTrue(TransactionValidator::validate($validData));
-        
+
         // Test with invalid data
         $invalidData = [
             'from' => '0x0000000000000000000000000000000000000001',
             'data' => 'invalid_hex'
         ];
         $this->assertFalse(TransactionValidator::validate($invalidData));
-        
+
         // Test with valid nonce
         $validNonce = [
             'from' => '0x0000000000000000000000000000000000000001',
             'nonce' => '0x1'
         ];
         $this->assertTrue(TransactionValidator::validate($validNonce));
-        
+
         // Test with invalid nonce
         $invalidNonce = [
             'from' => '0x0000000000000000000000000000000000000001',
