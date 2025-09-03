@@ -649,4 +649,32 @@ class UtilsTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $bn = Utils::toBn(new stdClass);
     }
+
+    /**
+     * Test toString method
+     */
+    public function testToString(): void
+    {
+        // Test with string
+        $this->assertEquals('hello', Utils::toString('hello'));
+        
+        // Test with integer
+        $this->assertEquals('123', Utils::toString(123));
+        
+        // Test with float
+        $this->assertEquals('123.45', Utils::toString(123.45));
+        
+        // Test with boolean true
+        $this->assertEquals('1', Utils::toString(true));
+        
+        // Test with boolean false
+        $this->assertEquals('', Utils::toString(false));
+        
+        // Test with null
+        $this->assertEquals('', Utils::toString(null));
+        
+        // Test with BigNumber
+        $bn = Utils::toBn('123');
+        $this->assertEquals('123', Utils::toString($bn));
+    }
 }
