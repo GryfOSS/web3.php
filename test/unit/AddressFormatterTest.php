@@ -9,14 +9,14 @@ class AddressFormatterTest extends TestCase
 {
     /**
      * formatter
-     * 
+     *
      * @var \Web3\Formatters\AddressFormatter
      */
     protected $formatter;
 
     /**
      * setUp
-     * 
+     *
      * @return void
      */
     public function setUp(): void
@@ -27,7 +27,7 @@ class AddressFormatterTest extends TestCase
 
     /**
      * testFormat
-     * 
+     *
      * @return void
      */
     public function testFormat()

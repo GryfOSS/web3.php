@@ -2,9 +2,9 @@
 
 /**
  * This file is part of web3.php package.
- * 
+ *
  * (c) Kuan-Cheng,Lai <alk03073135@gmail.com>
- * 
+ *
  * @author Peter Lai <alk03073135@gmail.com>
  * @license MIT
  */
@@ -21,7 +21,7 @@ class Utils
 {
     /**
      * SHA3_NULL_HASH
-     * 
+     *
      * @const string
      */
     const SHA3_NULL_HASH = 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
@@ -29,7 +29,7 @@ class Utils
     /**
      * UNITS
      * from ethjs-unit
-     * 
+     *
      * @const array
      */
     const UNITS = [
@@ -65,7 +65,7 @@ class Utils
     /**
      * NEGATIVE1
      * Cannot work, see: http://php.net/manual/en/language.constants.syntax.php
-     * 
+     *
      * @const
      */
     // const NEGATIVE1 = new BigNumber(-1);
@@ -80,7 +80,7 @@ class Utils
     /**
      * toHex
      * Encoding string or integer or numeric string(is not zero prefixed) or big number to hex.
-     * 
+     *
      * @param string|int|BigNumber $value
      * @param bool $isPrefix
      * @return string
@@ -109,7 +109,7 @@ class Utils
 
     /**
      * hexToBin
-     * 
+     *
      * @param string
      * @return string
      */
@@ -127,7 +127,7 @@ class Utils
 
     /**
      * isZeroPrefixed
-     * 
+     *
      * @param string
      * @return bool
      */
@@ -141,7 +141,7 @@ class Utils
 
     /**
      * stripZero
-     * 
+     *
      * @param string $value
      * @return string
      */
@@ -156,7 +156,7 @@ class Utils
 
     /**
      * isNegative
-     * 
+     *
      * @param string
      * @return bool
      */
@@ -170,7 +170,7 @@ class Utils
 
     /**
      * isAddress
-     * 
+     *
      * @param string $value
      * @return bool
      */
@@ -239,7 +239,7 @@ class Utils
 
     /**
      * isHex
-     * 
+     *
      * @param string $value
      * @return bool
      */
@@ -251,7 +251,7 @@ class Utils
     /**
      * sha3
      * keccak256
-     * 
+     *
      * @param string $value
      * @return string
      */
@@ -273,7 +273,7 @@ class Utils
 
     /**
      * toString
-     * 
+     *
      * @param mixed $value
      * @return string
      */
@@ -288,9 +288,9 @@ class Utils
      * toWei
      * Change number from unit to wei.
      * For example:
-     * $wei = Utils::toWei('1', 'kwei'); 
+     * $wei = Utils::toWei('1', 'kwei');
      * $wei->toString(); // 1000
-     * 
+     *
      * @param BigNumber|string $number
      * @param string $unit
      * @return \phpseclib\Math\BigInteger
@@ -354,9 +354,9 @@ class Utils
      * toEther
      * Change number from unit to ether.
      * For example:
-     * list($bnq, $bnr) = Utils::toEther('1', 'kether'); 
+     * list($bnq, $bnr) = Utils::toEther('1', 'kether');
      * $bnq->toString(); // 1000
-     * 
+     *
      * @param BigNumber|string|int $number
      * @param string $unit
      * @return array
@@ -376,9 +376,9 @@ class Utils
      * fromWei
      * Change number from wei to unit.
      * For example:
-     * list($bnq, $bnr) = Utils::fromWei('1000', 'kwei'); 
+     * list($bnq, $bnr) = Utils::fromWei('1000', 'kwei');
      * $bnq->toString(); // 1
-     * 
+     *
      * @param BigNumber|string|int $number
      * @param string $unit
      * @return \phpseclib\Math\BigInteger
@@ -400,7 +400,7 @@ class Utils
 
     /**
      * jsonMethodToString
-     * 
+     *
      * @param stdClass|array $json
      * @return string
      */
@@ -446,7 +446,7 @@ class Utils
 
     /**
      * jsonToArray
-     * 
+     *
      * @param stdClass|array $json
      * @return array
      */
@@ -482,7 +482,7 @@ class Utils
     /**
      * toBn
      * Change number or number string to bignumber.
-     * 
+     *
      * @param BigNumber|string|int $number
      * @return array|\phpseclib\Math\BigInteger
      */
@@ -529,7 +529,7 @@ class Utils
                 $number = str_replace('-', '', $number, $count);
                 $negative1 = new BigNumber(-1);
             }
-            if (self::isZeroPrefixed($number) || preg_match('/[a-f]+/', $number) === 1) {
+            if (self::isZeroPrefixed($number) || preg_match('/^[0-9a-f]+$/', $number) === 1) {
                 $number = self::stripZero($number);
                 $bn = new BigNumber($number, 16);
             } elseif (empty($number)) {

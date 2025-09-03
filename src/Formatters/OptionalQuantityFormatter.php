@@ -2,9 +2,9 @@
 
 /**
  * This file is part of web3.php package.
- * 
+ *
  * (c) Kuan-Cheng,Lai <alk03073135@gmail.com>
- * 
+ *
  * @author Peter Lai <alk03073135@gmail.com>
  * @license MIT
  */
@@ -21,7 +21,7 @@ class OptionalQuantityFormatter implements IFormatter
 {
     /**
      * format
-     * 
+     *
      * @param mixed $value
      * @return string
      */
@@ -30,6 +30,11 @@ class OptionalQuantityFormatter implements IFormatter
         if (TagValidator::validate($value)) {
             return $value;
         }
-        return QuantityFormatter::format($value);
+        try {
+            return QuantityFormatter::format($value);
+        } catch (\Exception $e) {
+            // Invalid input defaults to 0x0
+            return '0x0';
+        }
     }
 }
