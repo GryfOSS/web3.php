@@ -43,6 +43,16 @@ class HttpRequestManager extends RequestManager implements IRequestManager
     }
 
     /**
+     * getClient
+     *
+     * @return \GuzzleHttp\Client
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
      * sendPayload
      *
      * @param string $payload
@@ -83,8 +93,8 @@ class HttpRequestManager extends RequestManager implements IRequestManager
                     if (property_exists($result,'result')) {
                         $results[] = $result->result;
                     } else {
-                        if (isset($json->error)) {
-                            $error = $json->error;
+                        if (isset($result->error)) {
+                            $error = $result->error;
                             $errors[] = new RPCException(mb_ereg_replace('Error: ', '', $error->message), $error->code);
                         } else {
                             $results[] = null;

@@ -1,6 +1,4 @@
-FROM node:9.11.1-alpine
-
-MAINTAINER Peter Lai <alk03073135@gmail.com>
+FROM node:16
 
 RUN npm install -g ganache-cli
 
