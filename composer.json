@@ -1,6 +1,6 @@
 {
     "name": "gryfoss/web3.php",
-    "description": "Ethereum web3 interface.",
+    "description": "Ethereum web3 interface (maintained).",
     "type": "library",
     "license": "MIT",
     "require": {
