@@ -2,15 +2,16 @@
 
 /**
  * This file is part of web3.php package.
- * 
+ *
  * (c) Kuan-Cheng,Lai <alk03073135@gmail.com>
- * 
+ *
  * @author Peter Lai <alk03073135@gmail.com>
  * @license MIT
  */
 
 namespace Web3\Contracts;
 
+use InvalidArgumentException;
 use Web3\Utils;
 use Web3\Formatters\IntegerFormatter;
 
@@ -18,14 +19,14 @@ class SolidityType
 {
     /**
      * construct
-     * 
+     *
      * @return void
      */
     // public function  __construct() {}
 
     /**
      * get
-     * 
+     *
      * @param string $name
      * @return mixed
      */
@@ -41,7 +42,7 @@ class SolidityType
 
     /**
      * set
-     * 
+     *
      * @param string $name
      * @param mixed $value
      * @return mixed;
@@ -58,7 +59,7 @@ class SolidityType
 
     /**
      * callStatic
-     * 
+     *
      * @param string $name
      * @param array $arguments
      * @return void
@@ -67,7 +68,7 @@ class SolidityType
 
     /**
      * nestedTypes
-     * 
+     *
      * @param string $name
      * @return mixed
      */
@@ -86,7 +87,7 @@ class SolidityType
 
     /**
      * nestedName
-     * 
+     *
      * @param string $name
      * @return string
      */
@@ -105,7 +106,7 @@ class SolidityType
 
     /**
      * isDynamicArray
-     * 
+     *
      * @param string $name
      * @return bool
      */
@@ -118,7 +119,7 @@ class SolidityType
 
     /**
      * isStaticArray
-     * 
+     *
      * @param string $name
      * @return bool
      */
@@ -131,7 +132,7 @@ class SolidityType
 
     /**
      * staticArrayLength
-     * 
+     *
      * @param string $name
      * @return int
      */
@@ -152,7 +153,7 @@ class SolidityType
 
     /**
      * staticPartLength
-     * 
+     *
      * @param string $name
      * @return int
      */
@@ -181,7 +182,7 @@ class SolidityType
 
     /**
      * isDynamicType
-     * 
+     *
      * @return bool
      */
     public function isDynamicType()
@@ -191,7 +192,7 @@ class SolidityType
 
     /**
      * encode
-     * 
+     *
      * @param mixed $value
      * @param string $name
      * @return string
@@ -223,7 +224,7 @@ class SolidityType
 
     /**
      * decode
-     * 
+     *
      * @param mixed $value
      * @param string $offset
      * @param string $name
