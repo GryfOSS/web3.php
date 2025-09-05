@@ -1,0 +1,85 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: [8.1, 8.2, 8.3]
+
+    name: PHP ${{ matrix.php }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: mbstring, intl, gmp, bcmath
+        ini-values: post_max_size=256M, max_execution_time=180
+        coverage: xdebug
+        tools: composer:v2
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-${{ matrix.php }}-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Start Ganache
+      run: |
+        cd docker
+        docker compose up -d ganache
+        echo "Waiting for Ganache to start..."
+        sleep 15
+        # Verify Ganache is running with retries
+        for i in {1..5}; do
+          if curl -f -X POST --data '{"jsonrpc":"2.0","method":"net_version","params":[],"id":1}' -H "Content-Type: application/json" http://127.0.0.1:8545; then
+            echo "✅ Ganache is running"
+            break
+          else
+            echo "⏳ Attempt $i: Ganache not ready yet, waiting..."
+            sleep 5
+          fi
+        done
+
+    - name: Run PHPUnit Tests with Coverage
+      env:
+        XDEBUG_MODE: coverage
+      run: |
+        vendor/bin/phpunit --coverage-html coverage_html --coverage-clover coverage.xml --coverage-text --coverage-text --colors=never
+
+    - name: Run Behat Functional Tests
+      run: |
+        vendor/bin/behat --format=progress
+
+    - name: Check Code Coverage
+      run: |
+        php scripts/check-coverage.php
+
+    - name: Upload Coverage Report
+      uses: actions/upload-artifact@v3
+      if: matrix.php == '8.2'
+      with:
+        name: coverage-report
+        path: coverage_html/
+
+    - name: Stop Ganache
+      if: always()
+      run: |
+        cd docker
+        docker compose down

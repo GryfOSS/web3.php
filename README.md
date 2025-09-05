@@ -1,7 +1,7 @@
 # web3.php
 
-[![Build Status](https://travis-ci.org/sc0Vu/web3.php.svg?branch=master)](https://travis-ci.org/sc0Vu/web3.php)
-[![codecov](https://codecov.io/gh/sc0Vu/web3.php/branch/master/graph/badge.svg)](https://codecov.io/gh/sc0Vu/web3.php)
+[![Tests](https://github.com/GryfOSS/web3.php/workflows/Tests/badge.svg)](https://github.com/GryfOSS/web3.php/actions)
+[![Code Coverage](https://img.shields.io/badge/coverage-91.8%25-brightgreen.svg)](https://github.com/GryfOSS/web3.php/actions)
 [![Join the chat at https://gitter.im/web3-php/web3.php](https://img.shields.io/badge/gitter-join%20chat-brightgreen.svg)](https://gitter.im/web3-php/web3.php)
 [![Licensed under the MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/sc0Vu/web3.php/blob/master/LICENSE)
 
@@ -188,8 +188,8 @@ $functionData = $contract->at($contractAddress)->getData($functionName, $params)
 ```
 
 # Assign value to outside scope(from callback scope to outside scope)
-Due to callback is not like javascript callback, 
-if we need to assign value to outside scope, 
+Due to callback is not like javascript callback,
+if we need to assign value to outside scope,
 we need to assign reference to callback.
 ```php
 $newAccount = '';
@@ -245,7 +245,7 @@ docker-compose exec php ash
 ```
 /**
  * testHost
- * 
+ *
  * @var string
  */
 protected $testHost = 'http://ganache:8545';
