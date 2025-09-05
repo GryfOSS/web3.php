@@ -2,30 +2,20 @@
 
 [![Tests](https://github.com/GryfOSS/web3.php/workflows/Tests/badge.svg)](https://github.com/GryfOSS/web3.php/actions)
 [![Code Coverage](https://img.shields.io/badge/coverage-91.8%25-brightgreen.svg)](https://github.com/GryfOSS/web3.php/actions)
-[![Join the chat at https://gitter.im/web3-php/web3.php](https://img.shields.io/badge/gitter-join%20chat-brightgreen.svg)](https://gitter.im/web3-php/web3.php)
 [![Licensed under the MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/sc0Vu/web3.php/blob/master/LICENSE)
 
 
-A php interface for interacting with the Ethereum blockchain and ecosystem.
+A maintained php interface for interacting with the Ethereum blockchain and ecosystem.
+
+It is a modernised version of `https://github.com/iexbase/web3.php`. It includes
+more unit tests, higher tests coverage, functional tests, uses phpseclib3 and
+solves few bugs.
 
 # Install
 
-Set minimum stability to dev
 ```
-"minimum-stability": "dev"
+composer require gryfoss/web3.php
 ```
-
-Then
-```
-composer require sc0vu/web3.php dev-master
-```
-
-Or you can add this line in composer.json
-
-```
-"sc0vu/web3.php": "dev-master"
-```
-
 
 # Usage
 
@@ -204,84 +194,12 @@ $web3->personal->newAccount('123456', function ($err, $account) use (&$newAccoun
 });
 ```
 
-# Examples
+### Testing
 
-To run examples, you need to run ethereum blockchain local (testrpc).
-
-If you are using docker as development machain, you can try [ethdock](https://github.com/sc0vu/ethdock) to run local ethereum blockchain, just simply run `docker-compose up -d testrpc` and expose the `8545` port.
-
-# Develop
-
-### Local php cli installed
-
-1. Clone the repo and install packages.
-```
-git clone https://github.com/sc0Vu/web3.php.git && cd web3.php && composer install
-```
-
-2. Run test script.
-```
-vendor/bin/phpunit
-```
-
-### Docker container
-
-1. Clone the repo and run docker container.
-```
-git clone https://github.com/sc0Vu/web3.php.git
-```
-
-2. Copy web3.php to web3.php/docker/app directory and start container.
-```
-cp files docker/app && docker-compose up -d php ganache
-```
-
-3. Enter php container and install packages.
-```
-docker-compose exec php ash
-```
-
-4. Change testHost in `TestCase.php`
-```
-/**
- * testHost
- *
- * @var string
- */
-protected $testHost = 'http://ganache:8545';
-```
-
-5. Run test script
-```
-vendor/bin/phpunit
-```
-
-###### Install packages
-Enter container first
-```
-docker-compose exec php ash
-```
-
-1. gmp
-```
-apk add gmp-dev
-docker-php-ext-install gmp
-```
-
-2. bcmath
-```
-docker-php-ext-install bcmath
-```
-
-###### Remove extension
-Move the extension config from `/usr/local/etc/php/conf.d/`
-```
-mv /usr/local/etc/php/conf.d/extension-config-name to/directory
-```
-
-# API
-
-Todo.
+Ganache cli interface is provided as a docker container in docker/ folder. Go there
+and run `docker compose up -d` to run it. Then run tests using `run-tests.sh`.
+It runs both PHPUnit and functional tests via Behat.
 
 # License
+
 MIT
