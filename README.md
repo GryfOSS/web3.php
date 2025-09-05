@@ -11,6 +11,9 @@ It is a modernised version of `https://github.com/iexbase/web3.php`. It includes
 more unit tests, higher tests coverage, functional tests, uses phpseclib3 and
 solves few bugs.
 
+Version 1 can still be a drop-in replacement for `iexbase/web3.php`, but there
+is no intention to keep it that way going further.
+
 # Install
 
 ```
