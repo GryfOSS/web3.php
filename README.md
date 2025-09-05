@@ -180,23 +180,6 @@ $constructorData = $contract->bytecode($bytecode)->getData($params);
 $functionData = $contract->at($contractAddress)->getData($functionName, $params);
 ```
 
-# Assign value to outside scope(from callback scope to outside scope)
-Due to callback is not like javascript callback,
-if we need to assign value to outside scope,
-we need to assign reference to callback.
-```php
-$newAccount = '';
-
-$web3->personal->newAccount('123456', function ($err, $account) use (&$newAccount) {
-    if ($err !== null) {
-        echo 'Error: ' . $err->getMessage();
-        return;
-    }
-    $newAccount = $account;
-    echo 'New account: ' . $account . PHP_EOL;
-});
-```
-
 ### Testing
 
 Ganache cli interface is provided as a docker container in docker/ folder. Go there
