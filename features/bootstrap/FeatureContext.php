@@ -23,6 +23,7 @@ class FeatureContext implements Context
     private $recipient;
     private $amount;
     private $lastError;
+    private $transactionDetails;
 
     /**
      * Initializes context.
@@ -386,10 +387,286 @@ class FeatureContext implements Context
     }
 
     /**
+     * @Given I have access to funded accounts
+     */
+    public function iHaveAccessToFundedAccounts()
+    {
+        $eth = $this->web3->eth;
+        $accounts = null;
+        $error = null;
+
+        // Get the list of accounts from Ganache
+        $eth->accounts(function ($err, $result) use (&$accounts, &$error) {
+            if ($err !== null) {
+                $error = $err;
+            } else {
+                $accounts = $result;
+            }
+        });
+
+        // Wait for the callback
+        $timeout = 10;
+        $start = time();
+        while ($accounts === null && $error === null && (time() - $start) < $timeout) {
+            usleep(100000); // 100ms
+        }
+
+        if ($error !== null) {
+            throw new Exception('Failed to get accounts: ' . $error->getMessage());
+        }
+
+        if (!$accounts || count($accounts) < 2) {
+            throw new Exception('Need at least 2 accounts for testing transfers');
+        }
+
+        $this->accounts = $accounts;
+        $this->walletAddress = $accounts[0]; // Sender
+        $this->recipient = $accounts[1]; // Recipient
+    }
+
+    /**
+     * @When I transfer :amount ETH between funded accounts
+     */
+    public function iTransferEthBetweenFundedAccounts($amount)
+    {
+        $this->amount = $amount;
+        $this->iTransferEthToTheRecipient($amount);
+    }
+
+    /**
+     * @Given I set the recipient to a funded account
+     */
+    public function iSetTheRecipientToAFundedAccount()
+    {
+        $eth = $this->web3->eth;
+        $accounts = null;
+        $error = null;
+
+        // Get the list of accounts from Ganache
+        $eth->accounts(function ($err, $result) use (&$accounts, &$error) {
+            if ($err !== null) {
+                $error = $err;
+            } else {
+                $accounts = $result;
+            }
+        });
+
+        // Wait for the callback
+        $timeout = 10;
+        $start = time();
+        while ($accounts === null && $error === null && (time() - $start) < $timeout) {
+            usleep(100000); // 100ms
+        }
+
+        if ($error !== null) {
+            throw new Exception('Failed to get accounts: ' . $error->getMessage());
+        }
+
+        if (!$accounts || count($accounts) < 2) {
+            throw new Exception('Need at least 2 accounts for testing transfers');
+        }
+
+        // Use the first account as recipient (Ganache provides pre-funded accounts)
+        $this->recipient = $accounts[0];
+        $this->accounts = $accounts;
+    }
+
+    /**
      * @When I check the balance of my account
      */
     public function iCheckTheBalanceOfMyAccount()
     {
         $this->iCheckTheBalanceOf($this->walletAddress);
+    }
+
+    /**
+     * @When I retrieve the transaction details using the transaction hash
+     */
+    public function iRetrieveTheTransactionDetailsUsingTheTransactionHash()
+    {
+        if (!$this->transactionHash) {
+            throw new Exception('No transaction hash available to retrieve details');
+        }
+
+        $eth = $this->web3->eth;
+        $txDetails = null;
+        $error = null;
+
+        $eth->getTransactionByHash($this->transactionHash, function ($err, $transaction) use (&$txDetails, &$error) {
+            if ($err !== null) {
+                $error = $err;
+            } else {
+                $txDetails = $transaction;
+            }
+        });
+
+        // Wait for the callback
+        $timeout = 10; // 10 seconds should be enough for getting transaction details
+        $start = time();
+        while ($txDetails === null && $error === null && (time() - $start) < $timeout) {
+            usleep(100000); // 100ms
+        }
+
+        if ($error !== null) {
+            throw new Exception('Failed to retrieve transaction details: ' . $error->getMessage());
+        }
+
+        if ($txDetails === null) {
+            throw new Exception('Timeout retrieving transaction details');
+        }
+
+        $this->transactionDetails = $txDetails;
+    }
+
+    /**
+     * @Then the transaction details should contain the correct information
+     */
+    public function theTransactionDetailsShouldContainTheCorrectInformation()
+    {
+        if (!$this->transactionDetails) {
+            throw new Exception('No transaction details available');
+        }
+
+        $tx = $this->transactionDetails;
+
+        // Verify hash matches
+        if ($tx->hash !== $this->transactionHash) {
+            throw new Exception('Transaction hash mismatch: expected ' . $this->transactionHash . ', got ' . $tx->hash);
+        }
+
+        // Verify from address
+        if (strtolower($tx->from) !== strtolower($this->walletAddress)) {
+            throw new Exception('From address mismatch: expected ' . $this->walletAddress . ', got ' . $tx->from);
+        }
+
+        // Verify to address (if we have a recipient)
+        if ($this->recipient && strtolower($tx->to) !== strtolower($this->recipient)) {
+            throw new Exception('To address mismatch: expected ' . $this->recipient . ', got ' . $tx->to);
+        }
+
+        // Verify the transaction has basic required fields
+        $requiredFields = ['hash', 'from', 'to', 'value', 'gas', 'gasPrice', 'nonce', 'blockHash', 'blockNumber', 'transactionIndex'];
+        foreach ($requiredFields as $field) {
+            if (!property_exists($tx, $field)) {
+                throw new Exception("Transaction details missing required field: {$field}");
+            }
+        }
+    }
+
+    /**
+     * @Then the transaction should have a valid block number
+     */
+    public function theTransactionShouldHaveAValidBlockNumber()
+    {
+        if (!$this->transactionDetails) {
+            throw new Exception('No transaction details available');
+        }
+
+        $blockNumber = $this->transactionDetails->blockNumber;
+
+        if (!$blockNumber || $blockNumber === '0x0') {
+            throw new Exception('Transaction has no block number (still pending?)');
+        }
+
+        // Convert hex to decimal to validate it's a positive number
+        $blockNumberDec = hexdec($blockNumber);
+        if ($blockNumberDec <= 0) {
+            throw new Exception('Invalid block number: ' . $blockNumber);
+        }
+    }
+
+    /**
+     * @Then the transaction should have gas information
+     */
+    public function theTransactionShouldHaveGasInformation()
+    {
+        if (!$this->transactionDetails) {
+            throw new Exception('No transaction details available');
+        }
+
+        $tx = $this->transactionDetails;
+
+        // Check gas limit
+        if (!property_exists($tx, 'gas') || !$tx->gas) {
+            throw new Exception('Transaction missing gas limit');
+        }
+
+        // Check gas price
+        if (!property_exists($tx, 'gasPrice') || !$tx->gasPrice) {
+            throw new Exception('Transaction missing gas price');
+        }
+
+        // Validate gas is reasonable for ETH transfer (should be 21000)
+        $gasLimit = hexdec($tx->gas);
+        if ($gasLimit < 21000) {
+            throw new Exception('Gas limit too low: ' . $gasLimit);
+        }
+    }
+
+    /**
+     * @Then the transaction hash in details should match the original hash
+     */
+    public function theTransactionHashInDetailsShouldMatchTheOriginalHash()
+    {
+        if (!$this->transactionDetails) {
+            throw new Exception('No transaction details available');
+        }
+
+        if (!$this->transactionHash) {
+            throw new Exception('No original transaction hash available');
+        }
+
+        if ($this->transactionDetails->hash !== $this->transactionHash) {
+            throw new Exception('Transaction hash mismatch: expected ' . $this->transactionHash . ', got ' . $this->transactionDetails->hash);
+        }
+    }
+
+    /**
+     * @Then the transaction should contain all required blockchain fields
+     */
+    public function theTransactionShouldContainAllRequiredBlockchainFields()
+    {
+        if (!$this->transactionDetails) {
+            throw new Exception('No transaction details available');
+        }
+
+        $tx = $this->transactionDetails;
+        $requiredFields = [
+            'hash',
+            'from',
+            'to',
+            'value',
+            'gas',
+            'gasPrice',
+            'nonce',
+            'blockHash',
+            'blockNumber',
+            'transactionIndex',
+            'input'
+        ];
+
+        $missingFields = [];
+        foreach ($requiredFields as $field) {
+            if (!property_exists($tx, $field)) {
+                $missingFields[] = $field;
+            }
+        }
+
+        if (!empty($missingFields)) {
+            throw new Exception('Transaction details missing required fields: ' . implode(', ', $missingFields));
+        }
+
+        // Verify field values are not empty for critical fields
+        $criticalFields = ['hash', 'from', 'value', 'gas', 'gasPrice', 'nonce'];
+        $emptyFields = [];
+        foreach ($criticalFields as $field) {
+            if (empty($tx->$field) && $tx->$field !== '0x0') {
+                $emptyFields[] = $field;
+            }
+        }
+
+        if (!empty($emptyFields)) {
+            throw new Exception('Transaction details have empty critical fields: ' . implode(', ', $emptyFields));
+        }
     }
 }

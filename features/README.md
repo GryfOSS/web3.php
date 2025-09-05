@@ -17,6 +17,12 @@ This directory contains Behat functional tests that test the Web3.php library ag
 - **Transfer small amounts**: Tests transfers of small ETH amounts (0.001 ETH)
 - **Balance verification**: Verifies account balances are properly retrieved
 
+### 4. Transaction Details Retrieval (`features/transaction_details.feature`)
+- **Create and retrieve transaction details**: Tests creating transactions and retrieving their details by hash
+- **Transaction hash validation**: Ensures retrieved transaction details match the original transaction
+- **Required blockchain fields**: Validates all required transaction fields are present (hash, from, to, value, gas, etc.)
+- **Block information**: Verifies transactions have valid block numbers and gas information
+
 ## Prerequisites
 
 1. **Ganache blockchain**: The tests require a running Ganache instance
@@ -45,6 +51,7 @@ vendor/bin/behat
 vendor/bin/behat features/wallet_creation.feature
 vendor/bin/behat features/gas_estimation.feature
 vendor/bin/behat features/transfers.feature
+vendor/bin/behat features/transaction_details.feature
 ```
 
 ## Test Architecture
@@ -60,11 +67,17 @@ The `features/bootstrap/FeatureContext.php` file contains all the step definitio
 ### Key Step Definitions
 - `@Given I connect to the Ganache blockchain`: Establishes connection to the blockchain
 - `@Given I have an account with funds`: Gets a pre-funded Ganache account
+- `@Given I have access to funded accounts`: Gets multiple pre-funded Ganache accounts for transfers
 - `@When I create a new wallet`: Generates a new wallet with private key and address
 - `@When I estimate gas for transferring :amount ETH to :recipient`: Estimates gas for transactions
 - `@When I transfer :amount ETH to the recipient`: Executes ETH transfers
+- `@When I transfer :amount ETH between funded accounts`: Executes transfers between Ganache accounts
+- `@When I retrieve the transaction details using the transaction hash`: Retrieves transaction details by hash
 - `@Then I should get a gas estimate`: Validates gas estimation results
 - `@Then the transfer should be successful`: Validates successful transactions
+- `@Then the transaction details should contain the correct information`: Validates transaction details accuracy
+- `@Then the transaction should have a valid block number`: Ensures transaction is included in a block
+- `@Then the transaction should have gas information`: Validates gas-related transaction fields
 
 ## Configuration
 
@@ -95,11 +108,12 @@ default:
 
 All tests validate the core Web3.php functionality:
 
-✅ **9 scenarios** passed
-✅ **47 steps** executed successfully
+✅ **12 scenarios** passed
+✅ **71 steps** executed successfully
 ✅ **Wallet creation** working
 ✅ **Gas estimation** functional
 ✅ **ETH transfers** operational
+✅ **Transaction details retrieval** working
 ✅ **Balance queries** working
 
 ## Benefits
