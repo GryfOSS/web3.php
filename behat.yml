@@ -1,0 +1,13 @@
+default:
+    suites:
+        web3_functional:
+            paths:
+                - '%paths.base%/features'
+            contexts:
+                - FeatureContext
+
+    formatters:
+        pretty:
+            verbose:  true
+            paths:    false
+            snippets: false
